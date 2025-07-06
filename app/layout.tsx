@@ -11,7 +11,6 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 export const metadata: Metadata = {
   title: "Qantora - Trading & Investment Platform",
   description: "Your personal trading and investment companion",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
     generator: 'v0.dev'
 }
 

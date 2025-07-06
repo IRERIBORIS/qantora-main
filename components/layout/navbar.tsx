@@ -1,61 +1,39 @@
 "use client"
 
-import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { LayoutDashboard, LineChart, Bot, Users, GraduationCap } from "lucide-react"
-
-const navItems = [
-  {
-    name: "Portfolio",
-    href: "/",
-    icon: LayoutDashboard,
-  },
-  {
-    name: "Markets",
-    href: "/markets",
-    icon: LineChart,
-  },
-  {
-    name: "Cato AI",
-    href: "/cato",
-    icon: Bot,
-  },
-  {
-    name: "Community",
-    href: "/community",
-    icon: Users,
-  },
-  {
-    name: "Learning",
-    href: "/learning",
-    icon: GraduationCap,
-  },
-]
+import { NavBar } from "@/components/ui/tubelight-navbar"
 
 export default function Navbar() {
   const pathname = usePathname()
 
-  return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-100">
-      <div className="flex justify-around items-center h-16">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href
-          const IconComponent = item.icon
+  const navItems = [
+    {
+      name: "Portfolio",
+      url: "/",
+      icon: LayoutDashboard,
+    },
+    {
+      name: "Markets",
+      url: "/markets",
+      icon: LineChart,
+    },
+    {
+      name: "Cato AI",
+      url: "/cato",
+      icon: Bot,
+    },
+    {
+      name: "Learning",
+      url: "/learning",
+      icon: GraduationCap,
+    },
+    {
+      name: "Community",
+      url: "/community",
+      icon: Users,
+    },
+  ]
 
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`flex flex-col items-center justify-center w-full h-16 transition-colors ${
-                isActive ? "text-gray-900" : "text-gray-500 hover:text-gray-900"
-              }`}
-            >
-              <IconComponent size={22} />
-              <span className="text-xs mt-1">{item.name}</span>
-            </Link>
-          )
-        })}
-      </div>
-    </nav>
-  )
+  return <NavBar items={navItems} currentPath={pathname} className="fixed bottom-2 left-1/2 -translate-x-1/2 z-50" />
 }

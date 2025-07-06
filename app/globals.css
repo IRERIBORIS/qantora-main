@@ -78,34 +78,3 @@
 .font-display {
   font-family: "Clash Display", sans-serif;
 }
-
-/* Mobile-specific styles */
-.card-scroll {
-  @apply overflow-x-auto flex pb-4 -mx-4 px-4 space-x-4 scrollbar-hide;
-}
-
-.card-scroll > * {
-  @apply flex-shrink-0 w-[85%];
-}
-
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
-/* Swipe actions */
-.swipe-action {
-  @apply relative overflow-hidden;
-}
-
-.swipe-action-content {
-  @apply transition-transform duration-200;
-}
-
-.swipe-action-reveal {
-  @apply absolute top-0 right-0 h-full flex items-center;
-}

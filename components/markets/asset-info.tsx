@@ -70,83 +70,83 @@ export default function AssetInfo({ symbol }: AssetInfoProps) {
 
   return (
     <Card>
-      <CardHeader className="p-3 pb-0">
-        <CardTitle className="text-base font-display">Asset Information</CardTitle>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-lg font-display">Asset Information</CardTitle>
       </CardHeader>
       <CardContent className="p-0">
         <Tabs defaultValue="overview">
-          <div className="px-3">
+          <div className="px-4">
             <TabsList className="w-full">
-              <TabsTrigger value="overview" className="flex-1 text-xs">
+              <TabsTrigger value="overview" className="flex-1">
                 Overview
               </TabsTrigger>
-              <TabsTrigger value="stats" className="flex-1 text-xs">
+              <TabsTrigger value="stats" className="flex-1">
                 Statistics
               </TabsTrigger>
-              <TabsTrigger value="about" className="flex-1 text-xs">
+              <TabsTrigger value="about" className="flex-1">
                 About
               </TabsTrigger>
             </TabsList>
           </div>
 
-          <TabsContent value="overview" className="m-0 p-3">
-            <div className="grid grid-cols-2 gap-3">
+          <TabsContent value="overview" className="m-0 p-4">
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-xs text-gray-500">Current Price</p>
-                <p className="font-medium text-sm">{data.price}</p>
+                <p className="text-sm text-gray-500">Current Price</p>
+                <p className="font-medium">{data.price}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Change (24h)</p>
-                <p className={`font-medium text-sm ${data.change.startsWith("+") ? "text-green-600" : "text-red-600"}`}>
+                <p className="text-sm text-gray-500">Change (24h)</p>
+                <p className={`font-medium ${data.change.startsWith("+") ? "text-green-600" : "text-red-600"}`}>
                   {data.change}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Market Cap</p>
-                <p className="font-medium text-sm">{data.marketCap}</p>
+                <p className="text-sm text-gray-500">Market Cap</p>
+                <p className="font-medium">{data.marketCap}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Volume (24h)</p>
-                <p className="font-medium text-sm">{data.volume}</p>
+                <p className="text-sm text-gray-500">Volume (24h)</p>
+                <p className="font-medium">{data.volume}</p>
               </div>
             </div>
           </TabsContent>
 
-          <TabsContent value="stats" className="m-0 p-3">
-            <div className="grid grid-cols-2 gap-3">
+          <TabsContent value="stats" className="m-0 p-4">
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-xs text-gray-500">Day High</p>
-                <p className="font-medium text-sm">{data.high}</p>
+                <p className="text-sm text-gray-500">Day High</p>
+                <p className="font-medium">{data.high}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Day Low</p>
-                <p className="font-medium text-sm">{data.low}</p>
+                <p className="text-sm text-gray-500">Day Low</p>
+                <p className="font-medium">{data.low}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Open</p>
-                <p className="font-medium text-sm">{data.open}</p>
+                <p className="text-sm text-gray-500">Open</p>
+                <p className="font-medium">{data.open}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Previous Close</p>
-                <p className="font-medium text-sm">{data.prevClose}</p>
+                <p className="text-sm text-gray-500">Previous Close</p>
+                <p className="font-medium">{data.prevClose}</p>
               </div>
               {data.pe && (
                 <>
                   <div>
-                    <p className="text-xs text-gray-500">P/E Ratio</p>
-                    <p className="font-medium text-sm">{data.pe}</p>
+                    <p className="text-sm text-gray-500">P/E Ratio</p>
+                    <p className="font-medium">{data.pe}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">EPS</p>
-                    <p className="font-medium text-sm">{data.eps}</p>
+                    <p className="text-sm text-gray-500">EPS</p>
+                    <p className="font-medium">{data.eps}</p>
                   </div>
                 </>
               )}
             </div>
           </TabsContent>
 
-          <TabsContent value="about" className="m-0 p-3">
-            <p className="text-xs text-gray-600">{data.about}</p>
+          <TabsContent value="about" className="m-0 p-4">
+            <p className="text-sm text-gray-600">{data.about}</p>
           </TabsContent>
         </Tabs>
       </CardContent>

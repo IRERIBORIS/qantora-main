@@ -58,24 +58,24 @@ export default function MarketChart({ symbol, chartType, timeframe }: MarketChar
   }, [symbol, timeframe])
 
   if (data.length === 0) {
-    return <div className="h-[250px] flex items-center justify-center">Loading chart data...</div>
+    return <div className="h-[400px] flex items-center justify-center">Loading chart data...</div>
   }
 
   if (chartType === "line" || chartType === "area") {
     return (
-      <div className="h-[250px]">
+      <div className="h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
+          <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#111827" stopOpacity={0.8} />
                 <stop offset="95%" stopColor="#111827" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <XAxis dataKey="time" tick={{ fontSize: 10 }} />
-            <YAxis domain={["auto", "auto"]} tick={{ fontSize: 10 }} />
+            <XAxis dataKey="time" />
+            <YAxis domain={["auto", "auto"]} />
             <CartesianGrid strokeDasharray="3 3" />
-            <Tooltip contentStyle={{ fontSize: 12 }} />
+            <Tooltip />
             <Area type="monotone" dataKey="value" stroke="#111827" fillOpacity={1} fill="url(#colorValue)" />
           </AreaChart>
         </ResponsiveContainer>
@@ -85,13 +85,13 @@ export default function MarketChart({ symbol, chartType, timeframe }: MarketChar
 
   if (chartType === "bar") {
     return (
-      <div className="h-[250px]">
+      <div className="h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
-            <XAxis dataKey="time" tick={{ fontSize: 10 }} />
-            <YAxis domain={["auto", "auto"]} tick={{ fontSize: 10 }} />
+          <BarChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+            <XAxis dataKey="time" />
+            <YAxis domain={["auto", "auto"]} />
             <CartesianGrid strokeDasharray="3 3" />
-            <Tooltip contentStyle={{ fontSize: 12 }} />
+            <Tooltip />
             <Bar dataKey="value" fill="#111827" />
           </BarChart>
         </ResponsiveContainer>
@@ -101,24 +101,24 @@ export default function MarketChart({ symbol, chartType, timeframe }: MarketChar
 
   // Candlestick chart (simplified with bars for up/down)
   return (
-    <div className="h-[250px]">
+    <div className="h-[400px]">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
-          <XAxis dataKey="time" tick={{ fontSize: 10 }} />
-          <YAxis domain={["auto", "auto"]} tick={{ fontSize: 10 }} />
+        <BarChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+          <XAxis dataKey="time" />
+          <YAxis domain={["auto", "auto"]} />
           <CartesianGrid strokeDasharray="3 3" />
           <Tooltip
             content={({ active, payload }) => {
               if (active && payload && payload.length) {
                 const data = payload[0].payload
                 return (
-                  <div className="bg-white p-2 border rounded shadow-sm text-xs">
+                  <div className="bg-white p-3 border rounded shadow-sm">
                     <p className="font-medium">{data.time}</p>
-                    <p>Open: {data.open.toFixed(2)}</p>
-                    <p>High: {data.high.toFixed(2)}</p>
-                    <p>Low: {data.low.toFixed(2)}</p>
-                    <p>Close: {data.close.toFixed(2)}</p>
-                    <p>Volume: {data.volume.toLocaleString()}</p>
+                    <p className="text-sm">Open: {data.open.toFixed(2)}</p>
+                    <p className="text-sm">High: {data.high.toFixed(2)}</p>
+                    <p className="text-sm">Low: {data.low.toFixed(2)}</p>
+                    <p className="text-sm">Close: {data.close.toFixed(2)}</p>
+                    <p className="text-sm">Volume: {data.volume.toLocaleString()}</p>
                   </div>
                 )
               }
@@ -127,8 +127,8 @@ export default function MarketChart({ symbol, chartType, timeframe }: MarketChar
           />
           <Bar dataKey="high" fill="transparent" stroke="#111827" strokeWidth={1} />
           <Bar dataKey="low" fill="transparent" />
-          <Bar dataKey={(d) => (d.close > d.open ? d.close - d.open : 0)} fill="#22c55e" stackId="stack" barSize={6} />
-          <Bar dataKey={(d) => (d.close <= d.open ? d.open - d.close : 0)} fill="#ef4444" stackId="stack" barSize={6} />
+          <Bar dataKey={(d) => (d.close > d.open ? d.close - d.open : 0)} fill="#22c55e" stackId="stack" barSize={8} />
+          <Bar dataKey={(d) => (d.close <= d.open ? d.open - d.close : 0)} fill="#ef4444" stackId="stack" barSize={8} />
         </BarChart>
       </ResponsiveContainer>
     </div>
