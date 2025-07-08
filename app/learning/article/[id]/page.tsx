@@ -225,8 +225,8 @@ export default function ArticlePage() {
             {/* Article Header */}
             <div className="mb-8">
               <div className="bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium inline-block mb-6">
-                {article.topic}
-              </div>
+            {article.topic}
+          </div>
 
               <h1 className="font-display font-bold text-4xl xl:text-5xl text-foreground mb-6 leading-tight">
                 {article.title}
@@ -234,36 +234,36 @@ export default function ArticlePage() {
 
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                 <div className="flex items-center space-x-6 text-sm text-muted-foreground">
-                  <div className="flex items-center">
+              <div className="flex items-center">
                     <User className="h-4 w-4 mr-2" />
                     <span className="font-medium">{article.author}</span>
-                  </div>
-                  <div className="flex items-center">
+              </div>
+              <div className="flex items-center">
                     <Calendar className="h-4 w-4 mr-2" />
-                    <span>{article.date}</span>
-                  </div>
-                  <div className="flex items-center">
+                <span>{article.date}</span>
+              </div>
+              <div className="flex items-center">
                     <Clock className="h-4 w-4 mr-2" />
-                    <span>{article.readTime}</span>
-                  </div>
+                <span>{article.readTime}</span>
+              </div>
                   <div className="flex items-center">
                     <Eye className="h-4 w-4 mr-2" />
                     <span>{article.views.toLocaleString()} views</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-3">
-                  <Button variant="outline" size="sm" className="hover:bg-accent">
-                    <Bookmark className="h-4 w-4 mr-2" />
-                    {article.bookmarks}
-                  </Button>
-                  <Button variant="outline" size="sm" className="hover:bg-accent">
-                    <Share2 className="h-4 w-4 mr-2" />
-                    Share
-                  </Button>
-                </div>
               </div>
             </div>
+
+            <div className="flex items-center space-x-3">
+                  <Button variant="outline" size="sm" className="hover:bg-accent">
+                    <Bookmark className="h-4 w-4 mr-2" />
+                {article.bookmarks}
+              </Button>
+                  <Button variant="outline" size="sm" className="hover:bg-accent">
+                    <Share2 className="h-4 w-4 mr-2" />
+                Share
+              </Button>
+            </div>
+          </div>
+        </div>
 
             {/* Article Content */}
             <Card className="border-border shadow-sm bg-card">

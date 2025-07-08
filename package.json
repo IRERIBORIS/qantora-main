@@ -68,5 +68,21 @@
     "postcss": "^8.5",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
-  }
+  },
+  "description": "![Qantora Logo](public/images/logo.png)",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IRERIBORIS/qantora-main.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IRERIBORIS/qantora-main/issues"
+  },
+  "homepage": "https://github.com/IRERIBORIS/qantora-main#readme"
 }

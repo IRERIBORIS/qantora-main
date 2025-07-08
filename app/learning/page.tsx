@@ -24,6 +24,7 @@ import {
   TrendingUp,
   Star,
 } from "lucide-react"
+import '../../styles/globals.css'
 
 export default function LearningPage() {
   const router = useRouter()
@@ -484,7 +485,7 @@ export default function LearningPage() {
             <div className="w-full text-left mb-8">
               <h2 className="font-display text-xl md:text-2xl font-bold mb-1 w-full text-left">Behavioral Finance Insights</h2>
               <p className="text-foreground text-base md:text-lg font-medium w-full text-left">Overcome psychological barriers to trading success</p>
-            </div>
+              </div>
             <div className="w-full flex gap-4 overflow-x-auto scrollbar-hide pb-4 hide-scrollbar flex-nowrap justify-start items-stretch" style={{margin: 0, paddingLeft: 0, paddingRight: 0}}>
               {["Trading Psychology", "FOMO", "Loss Aversion", "Confirmation Bias", "Emotional Trading", "Herd Mentality", "Discipline", "Patience", "Overconfidence", "Risk Perception", "Cognitive Biases", "Mental Models", "Journaling", "Meditation", "Biofeedback", "Trader Mindset", "Focus Training", "Stress Management", "Decision Fatigue", "Probabilistic Thinking"].map((tag) => (
                 <button

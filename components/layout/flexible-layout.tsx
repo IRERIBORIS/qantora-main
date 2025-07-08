@@ -22,9 +22,6 @@ export function FlexibleLayout({ children, className, fullScreen = false, paddin
     <div
       className={cn(
         "w-full",
-        fullScreen ? "min-h-screen" : "min-h-[calc(100vh-4rem)]",
-        paddingClasses[padding],
-        "pb-20 sm:pb-24", // Account for navbar
         className,
       )}
     >

@@ -23,6 +23,7 @@ import {
   Crown,
   History,
 } from "lucide-react"
+import '../../styles/globals.css'
 
 interface Message {
   id: number
@@ -88,11 +89,11 @@ export default function CatoPage() {
   // --- Layout ---
   return (
     <div className="h-screen w-screen bg-background text-foreground flex flex-col">
-      {/* Header */}
+          {/* Header */}
       <header className="flex items-center justify-end px-4 lg:px-8 py-4 border-b border-border bg-card/80 backdrop-blur-md flex-shrink-0">
         <Button variant="ghost" size="icon" className="rounded-xl">
           <Settings className="h-5 w-5 lg:h-6 lg:w-6 text-muted-foreground" />
-        </Button>
+            </Button>
       </header>
       {/* Main Area: 3 columns on desktop, stacked on mobile */}
       <main className="flex-1 flex flex-col lg:flex-row min-h-0 w-full">
@@ -106,12 +107,12 @@ export default function CatoPage() {
           <div className="w-full max-w-3xl h-full flex flex-col bg-card/95 border border-border rounded-2xl shadow-2xl mx-2 lg:mx-8 p-0 mb-4 lg:mb-8">
             {/* Messages (scrollable) */}
             <div className="flex-1 min-h-0 overflow-y-auto px-6 py-6 space-y-5">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex ${message.role === "assistant" ? "justify-start" : "justify-end"}`}
-                >
+                {messages.map((message) => (
                   <div
+                    key={message.id}
+                    className={`flex ${message.role === "assistant" ? "justify-start" : "justify-end"}`}
+                  >
+                    <div
                     className={`max-w-[90%] rounded-2xl p-4 shadow font-display text-base border border-border ${
                       message.role === "assistant"
                         ? "bg-gradient-to-br from-accent/40 to-card"
@@ -121,36 +122,36 @@ export default function CatoPage() {
                     <p className="leading-relaxed text-foreground">{message.content}</p>
                     <div className="flex items-center justify-between mt-3">
                       <p className="text-xs text-muted-foreground">
-                        {message.timestamp.toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </p>
-                    </div>
+                      {message.timestamp.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
                   </div>
                 </div>
-              ))}
-              {isLoading && (
-                <div className="flex justify-start">
+              </div>
+            ))}
+            {isLoading && (
+              <div className="flex justify-start">
                   <div className="bg-gradient-to-br from-accent/40 to-card border border-border rounded-2xl p-4 max-w-[90%] shadow">
-                    <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
                       <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
                       <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                       <span className="text-sm text-muted-foreground ml-2">Cato is thinking...</span>
-                    </div>
                   </div>
                 </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
             {/* Input (fixed at bottom of card, with bottom padding for navbar) */}
             <div className="bg-background border-t border-border px-6 py-4 flex items-center gap-2 shadow-lg shrink-0 rounded-b-2xl pb-safe pb-24 lg:pb-10">
-              <Input
+                <Input
                 placeholder="Message Cato..."
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
                 className="flex-1 pr-8 h-10 lg:h-12 rounded-xl border border-border font-display text-base bg-card text-foreground focus:ring-2 focus:ring-primary/30"
               />
               <Button
@@ -163,16 +164,16 @@ export default function CatoPage() {
               >
                 Mind Mirror
               </Button>
-              <Button
-                size="icon"
+                <Button
+                  size="icon"
                 variant="default"
                 className="rounded-lg"
                 aria-label="Send message"
-                onClick={handleSendMessage}
-                disabled={!input.trim() || isLoading}
-              >
+                  onClick={handleSendMessage}
+                  disabled={!input.trim() || isLoading}
+                >
                 <Send className="h-5 w-5 text-primary-foreground" />
-              </Button>
+                </Button>
             </div>
           </div>
         </section>
