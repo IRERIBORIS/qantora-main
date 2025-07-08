@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { FlexibleLayout } from "@/components/layout/flexible-layout"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -35,6 +35,9 @@ import {
   Menu,
   ChevronLeft,
   ChevronRight,
+  Maximize2,
+  Minimize2,
+  Plus,
 } from "lucide-react"
 import MarketChart from "@/components/markets/market-chart"
 
@@ -47,6 +50,17 @@ export default function MarketsPage() {
   const [showAdvancedControls, setShowAdvancedControls] = useState(true)
   const [watchlistCollapsed, setWatchlistCollapsed] = useState(false)
   const [showSidebar, setShowSidebar] = useState(false)
+  const [isFullScreen, setIsFullScreen] = useState(false)
+  const [showSettingsSheet, setShowSettingsSheet] = useState(false)
+  const [showWatchlist, setShowWatchlist] = useState(false)
+  const [showAlerts, setShowAlerts] = useState(false)
+  const [showTechnical, setShowTechnical] = useState(false)
+  const [openToolMenu, setOpenToolMenu] = useState<string | null>(null)
+  const leftSidebarRef = useRef<HTMLDivElement>(null)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [selectedTag, setSelectedTag] = useState("All")
+  const [showAddInstrument, setShowAddInstrument] = useState(false)
+  const [newInstrument, setNewInstrument] = useState("")
 
   const assets = [
     { symbol: "BTCUSD", name: "Bitcoin", price: "68,245.30", change: "+2.7%", isPositive: true },
@@ -57,8 +71,10 @@ export default function MarketsPage() {
     { symbol: "AUDUSD", name: "AUD/USD", price: "0.65587", change: "-0.12%", isPositive: false },
   ]
 
-  const favoriteTimeframes = ["1M", "5M", "15M", "1H", "4H", "1D"]
-  const allTimeframes = ["1M", "5M", "15M", "30M", "1H", "4H", "1D", "1W", "1M", "3M", "6M", "1Y"]
+  const allTimeframes = [
+    "MN", "W1", "D1", "H4", "H3", "H2", "H1", "M45", "M30", "M15", "M10", "M5", "M3", "M2", "M1"
+  ];
+  const [favoriteTimeframes, setFavoriteTimeframes] = useState<string[]>(["D1", "H1"]);
 
   const drawingTools = [
     { id: "crosshair", icon: Crosshair, name: "Crosshair" },
@@ -71,9 +87,41 @@ export default function MarketsPage() {
     { id: "lock", icon: Lock, name: "Lock" },
   ]
 
+  const tagOptions = ["All", "Favorites", "Stocks", "Futures", "Forex", "Crypto", "Indices"]
+
   const toggleFavorite = (symbol: string) => {
     setFavorites((prev) => (prev.includes(symbol) ? prev.filter((s) => s !== symbol) : [...prev, symbol]))
   }
+
+  const toggleFavoriteTimeframe = (tf: string) => {
+    setFavoriteTimeframes((prev) =>
+      prev.includes(tf) ? prev.filter((t) => t !== tf) : [...prev, tf]
+    );
+  };
+
+  // Set header height and top bar height for correct watchlist offset
+  const HEADER_HEIGHT = 64; // adjust if your header is taller
+  const TOPBAR_HEIGHT = 64; // sticky top bar
+  const WATCHLIST_TOP = HEADER_HEIGHT + TOPBAR_HEIGHT + 16; // 16px extra margin
+
+  // Full screen notification state
+  const [showEscNotification, setShowEscNotification] = useState(false);
+
+  // Add Escape key handler for full screen toggle
+  useEffect(() => {
+    if (!isFullScreen) return;
+    setShowEscNotification(true);
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsFullScreen(false);
+    };
+    window.addEventListener("keydown", handleEsc);
+    // Hide notification after 3 seconds
+    const timeout = setTimeout(() => setShowEscNotification(false), 3000);
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+      clearTimeout(timeout);
+    };
+  }, [isFullScreen]);
 
   return (
     <FlexibleLayout fullScreen padding="none">
@@ -254,284 +302,293 @@ export default function MarketsPage() {
       </div>
 
       {/* Desktop Professional Layout */}
-      <div className="hidden lg:block h-screen bg-gray-50 overflow-hidden">
-        {/* Enhanced Top Toolbar with Asset Info */}
-        <div className="sticky top-0 z-50 bg-white border-b border-gray-200 px-6 py-3">
-          <div className="flex items-center justify-between">
-            {/* Left Section - Asset Info */}
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-4">
-                <h2 className="font-bold text-xl">{selectedAsset}</h2>
-                <div className="text-right">
-                  <span className="font-medium text-lg">{assets.find((a) => a.symbol === selectedAsset)?.price}</span>
-                  <span
-                    className={`ml-2 font-medium ${
-                      assets.find((a) => a.symbol === selectedAsset)?.isPositive ? "text-green-600" : "text-red-600"
+      <div className="hidden lg:flex flex-col h-screen bg-background text-foreground overflow-hidden">
+        {/* Enhanced Top Toolbar with Asset Info - hide in fullscreen */}
+        {!isFullScreen && (
+          <div className="sticky top-0 z-50 bg-white border-b border-gray-200 px-6" style={{ height: TOPBAR_HEIGHT }}>
+            <div className="flex items-center justify-between h-full">
+              {/* Left Section - Asset Info */}
+              <div className="flex items-center gap-6">
+                <div className="flex items-center gap-4">
+                  <h2 className="font-bold text-xl">{selectedAsset}</h2>
+                  <div className="text-right flex items-center gap-2">
+                    <span className="font-medium text-lg">{assets.find((a) => a.symbol === selectedAsset)?.price}</span>
+                    <span className={`ml-2 font-medium ${assets.find((a) => a.symbol === selectedAsset)?.isPositive ? "text-green-600" : "text-red-600"}`}>
+                      {assets.find((a) => a.symbol === selectedAsset)?.change}
+                    </span>
+                  </div>
+                </div>
+                {/* Timeframe Favorites */}
+                {favoriteTimeframes.length > 0 && (
+                  <div className="flex items-center gap-2 mr-4">
+                    {favoriteTimeframes.map((tf) => (
+                      <button
+                        key={tf}
+                        className={`px-3 py-1 rounded-lg font-display text-sm transition-colors bg-muted text-foreground border border-border flex items-center gap-1 ${timeframe === tf ? "bg-primary text-primary-foreground" : "hover:bg-accent"}`}
+                        onClick={() => setTimeframe(tf)}
+                      >
+                        {tf}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {/* All Timeframes */}
+                <div className="relative">
+                  <Select value={timeframe} onValueChange={setTimeframe}>
+                    <SelectTrigger className="w-32">
+                      <SelectValue placeholder="Timeframe" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {allTimeframes.map((tf) => (
+                        <div key={tf} className="flex items-center justify-between px-2 py-1 hover:bg-muted rounded cursor-pointer">
+                          <SelectItem value={tf} className="flex-1">{tf}</SelectItem>
+                          <span onClick={e => { e.stopPropagation(); toggleFavoriteTimeframe(tf); }} className="ml-2 cursor-pointer">
+                            <Star className={`h-4 w-4 ${favoriteTimeframes.includes(tf) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"}`} />
+                          </span>
+                        </div>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                {/* Chart Types */}
+                <div className="flex border border-gray-200 rounded-lg overflow-hidden">
+                  <button
+                    className={`p-2 ${
+                      chartType === "line" ? "bg-gray-900 text-white" : "bg-white text-gray-700 hover:bg-gray-100"
                     }`}
+                    onClick={() => setChartType("line")}
                   >
-                    {assets.find((a) => a.symbol === selectedAsset)?.change}
-                  </span>
+                    <LineChart className="h-4 w-4" />
+                  </button>
+                  <button
+                    className={`p-2 ${
+                      chartType === "bar" ? "bg-gray-900 text-white" : "bg-white text-gray-700 hover:bg-gray-100"
+                    }`}
+                    onClick={() => setChartType("bar")}
+                  >
+                    <BarChart4 className="h-4 w-4" />
+                  </button>
+                  <button
+                    className={`p-2 ${
+                      chartType === "candle" ? "bg-gray-900 text-white" : "bg-white text-gray-700 hover:bg-gray-100"
+                    }`}
+                    onClick={() => setChartType("candle")}
+                  >
+                    <CandlestickChart className="h-4 w-4" />
+                  </button>
                 </div>
               </div>
-
-              {/* Timeframe Dropdown */}
-              <Select value={timeframe} onValueChange={setTimeframe}>
-                <SelectTrigger className="w-24">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <div className="p-2">
-                    <div className="text-xs font-medium text-gray-500 mb-2">Favorites</div>
-                    {favoriteTimeframes.map((tf) => (
-                      <SelectItem key={tf} value={tf}>
-                        {tf}
-                      </SelectItem>
-                    ))}
-                    <div className="border-t my-2"></div>
-                    <div className="text-xs font-medium text-gray-500 mb-2">All Timeframes</div>
-                    {allTimeframes
-                      .filter((tf) => !favoriteTimeframes.includes(tf))
-                      .map((tf) => (
-                        <SelectItem key={tf} value={tf}>
-                          {tf}
-                        </SelectItem>
-                      ))}
-                  </div>
-                </SelectContent>
-              </Select>
-
-              {/* Chart Types */}
-              <div className="flex border border-gray-200 rounded-lg overflow-hidden">
-                <button
-                  className={`p-2 ${
-                    chartType === "line" ? "bg-gray-900 text-white" : "bg-white text-gray-700 hover:bg-gray-100"
-                  }`}
-                  onClick={() => setChartType("line")}
-                >
-                  <LineChart className="h-4 w-4" />
-                </button>
-                <button
-                  className={`p-2 ${
-                    chartType === "bar" ? "bg-gray-900 text-white" : "bg-white text-gray-700 hover:bg-gray-100"
-                  }`}
-                  onClick={() => setChartType("bar")}
-                >
-                  <BarChart4 className="h-4 w-4" />
-                </button>
-                <button
-                  className={`p-2 ${
-                    chartType === "candle" ? "bg-gray-900 text-white" : "bg-white text-gray-700 hover:bg-gray-100"
-                  }`}
-                  onClick={() => setChartType("candle")}
-                >
-                  <CandlestickChart className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* Center Section */}
-            <div className="flex items-center gap-3">
-              <Button variant="ghost" size="icon" className="hover:bg-gray-100" title="Technical Analysis">
-                <Activity className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="hover:bg-gray-100" title="Alerts">
-                <Bell className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="hover:bg-gray-100" title="Replay">
-                <Play className="h-4 w-4" />
-              </Button>
-            </div>
-
-            {/* Right Section */}
-            <div className="flex items-center gap-3">
-              <Button variant="ghost" size="icon" className="hover:bg-gray-100" title="Screenshot">
-                <Camera className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="hover:bg-gray-100" title="Save Screenshots">
-                <Folder className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="sm" className="gap-2 bg-transparent">
-                <Share2 className="h-4 w-4" />
-                Publish
-              </Button>
-              <Button variant="ghost" size="icon" className="hover:bg-gray-100">
-                <Settings className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex h-[calc(100vh-4rem)]">
-          {/* Left Vertical Toolbar - Drawing Tools */}
-          <div className="w-16 bg-gradient-to-b from-gray-50 to-gray-100 border-r border-gray-200 flex flex-col items-center py-6 gap-3">
-            {drawingTools.map((tool) => {
-              const IconComponent = tool.icon
-              return (
-                <Button
-                  key={tool.id}
-                  variant="ghost"
-                  size="icon"
-                  className={`w-10 h-10 rounded-xl transition-all duration-200 group relative ${
-                    activeTool === tool.id
-                      ? "bg-gray-900 text-white shadow-lg"
-                      : "hover:bg-white hover:shadow-md text-gray-600"
-                  }`}
-                  onClick={() => setActiveTool(tool.id)}
-                >
-                  <IconComponent className="h-4 w-4" />
-                  {/* Tooltip */}
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
-                    {tool.name}
-                  </div>
+              {/* Right Section */}
+              <div className="flex items-center gap-3">
+                <Button variant="ghost" size="icon" className="hover:bg-gray-100" title="Screenshot">
+                  <Camera className="h-4 w-4" />
                 </Button>
-              )
-            })}
-
-            <div className="border-t border-gray-300 w-8 my-2"></div>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className="w-10 h-10 rounded-xl hover:bg-white hover:shadow-md text-gray-600 group relative"
-              title="More Tools"
-            >
-              <MoreHorizontal className="h-4 w-4" />
-              <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
-                More Tools
+                <Button variant="ghost" size="icon" className="hover:bg-gray-100" title="Save Screenshots">
+                  <Folder className="h-4 w-4" />
+                </Button>
+                <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+                  <Share2 className="h-4 w-4" />
+                  Publish
+                </Button>
+                <Button variant="ghost" size="icon" className="hover:bg-gray-100" title="Full Screen" onClick={() => setIsFullScreen(v => !v)}>
+                  <Maximize2 className="h-5 w-5" />
+                </Button>
+                <Button variant="ghost" size="icon" className="hover:bg-gray-100" title="Settings" onClick={() => setShowSettingsSheet(true)}>
+                  <Settings className="h-4 w-4" />
+                </Button>
               </div>
-            </Button>
+            </div>
           </div>
+        )}
 
-          <div className="flex-1 flex">
+        <div className="flex-1 min-h-0 flex" style={{ height: isFullScreen ? '100vh' : `calc(100vh - ${TOPBAR_HEIGHT}px)` }}>
+          {/* Left Sidebar - hide in fullscreen */}
+          {!isFullScreen && (
+            <div className="bg-white/60 backdrop-blur-lg border border-border rounded-xl shadow-lg flex flex-col h-full w-16 items-center py-6 gap-3 overflow-hidden relative z-30">
+              <div className="flex flex-col items-center gap-3 w-full">
+                {drawingTools.map((tool) => {
+                  const IconComponent = tool.icon;
+                  const isActive = activeTool === tool.id && openToolMenu === tool.id;
+                  return (
+                    <div key={tool.id} className="relative group w-full flex flex-col items-center">
+                      <Button
+                        variant={isActive ? "default" : "ghost"}
+                        size="icon"
+                        className={`w-10 h-10 rounded-xl transition-all border border-border group relative mb-2 ${isActive ? "bg-primary/90 text-primary-foreground shadow-lg" : "bg-white/40 text-muted-foreground hover:bg-accent/60"}`}
+                        onClick={() => {
+                          if (isActive) {
+                            setActiveTool("");
+                            setOpenToolMenu(null);
+                          } else {
+                            setActiveTool(tool.id);
+                            setOpenToolMenu(tool.id);
+                          }
+                        }}
+                      >
+                        <IconComponent className="h-4 w-4" />
+                        {/* Tooltip - always visible on hover */}
+                        <div className="absolute left-full ml-2 px-2 py-1 bg-background/90 text-foreground text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 group-hover:visible visible transition-opacity whitespace-nowrap z-50">
+                          {tool.name}
+                        </div>
+                      </Button>
+                      {/* Side drop menu (only visible when toggle is clicked/active, perfectly aligned) */}
+                      {isActive && (
+                        <div
+                          className="absolute left-16 top-0 z-[100] min-w-[180px] bg-white/90 backdrop-blur-lg border border-border rounded-xl shadow-2xl p-2 flex flex-col gap-2 animate-in slide-in-from-left-10"
+                        >
+                          <button className="text-left px-3 py-2 rounded hover:bg-accent/60 transition font-display text-sm text-foreground">Menu Item 1</button>
+                          <button className="text-left px-3 py-2 rounded hover:bg-accent/60 transition font-display text-sm text-foreground">Menu Item 2</button>
+                          <button className="text-left px-3 py-2 rounded hover:bg-accent/60 transition font-display text-sm text-foreground">Menu Item 3</button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          <div className="flex-1 flex pl-20 h-full overflow-hidden relative z-10">
             {/* Main Chart Area */}
-            <div className="flex-1 relative bg-white">
+            <div className={isFullScreen ? "fixed inset-0 z-50 bg-background flex flex-col" : "flex-1 relative bg-white h-full overflow-hidden"}>
+              {/* Full screen notification */}
+              {isFullScreen && showEscNotification && (
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 bg-black/80 text-white px-6 py-2 rounded-xl shadow-lg font-display text-base animate-in fade-in">
+                  Press Esc to minimize
+                </div>
+              )}
               {/* Chart */}
-              <div className="h-full p-6">
+              <div className={isFullScreen ? "flex-1 w-full overflow-hidden pb-32" : "h-full w-full overflow-hidden pb-32"}>
                 <MarketChart symbol={selectedAsset} chartType={chartType} timeframe={timeframe} />
               </div>
-
-              {/* Movable Advanced Controls */}
-              {showAdvancedControls && (
-                <div className="absolute bottom-6 left-6 flex items-center gap-2 bg-white/95 backdrop-blur-sm rounded-xl p-3 border border-gray-200 shadow-lg">
-                  <Button variant="ghost" size="icon" className="w-8 h-8 hover:bg-gray-100" title="Undo">
-                    <Undo className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="w-8 h-8 hover:bg-gray-100" title="Redo">
-                    <Redo className="h-4 w-4" />
-                  </Button>
-                  <div className="w-px h-6 bg-gray-300 mx-1"></div>
-                  <Button variant="ghost" size="icon" className="w-8 h-8 hover:bg-gray-100" title="Magnet Mode">
-                    <Magnet className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="w-8 h-8 hover:bg-gray-100" title="Grid Toggle">
-                    <Grid className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="w-8 h-8 hover:bg-gray-100" title="Visibility">
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                  <div className="w-px h-6 bg-gray-300 mx-1"></div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="w-8 h-8 hover:bg-gray-100"
-                    onClick={() => setShowAdvancedControls(false)}
-                    title="Hide Controls"
-                  >
-                    <Lock className="h-4 w-4" />
-                  </Button>
-                </div>
+              {/* Full screen minimize toggle (top right) */}
+              {isFullScreen && (
+                <Button variant="outline" className="absolute top-4 right-4 z-50" onClick={() => setIsFullScreen(false)}>
+                  <Minimize2 className="h-5 w-5 mr-2" /> Minimize
+                </Button>
               )}
             </div>
 
-            {/* Right Vertical Toolbar - Collapsible Watchlist */}
-            <div
-              className={`bg-white border-l border-gray-200 transition-all duration-300 ${
-                watchlistCollapsed ? "w-12" : "w-80"
-              }`}
-            >
-              {watchlistCollapsed ? (
-                <div className="p-3 flex flex-col items-center">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setWatchlistCollapsed(false)}
-                    className="w-8 h-8 mb-4"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                  <div className="space-y-2">
-                    {favorites.slice(0, 3).map((symbol) => (
-                      <div
-                        key={symbol}
-                        className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-medium cursor-pointer ${
-                          selectedAsset === symbol ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-600"
-                        }`}
-                        onClick={() => setSelectedAsset(symbol)}
+            {/* Right Sidebar - hide in fullscreen */}
+            {!isFullScreen && (
+              <div className="bg-white/60 backdrop-blur-lg border border-border rounded-xl shadow-lg flex flex-col h-full w-16 items-center py-6 gap-3 overflow-hidden">
+                {/* Watchlist toggle first */}
+                <Button
+                  variant={showWatchlist ? "default" : "ghost"}
+                  size="icon"
+                  className={`w-10 h-10 rounded-xl mb-2 transition-all border border-border shadow ${showWatchlist ? "bg-primary/90 text-primary-foreground" : "bg-white/40 text-muted-foreground hover:bg-accent/60"}`}
+                  title="Watchlist"
+                  onClick={() => setShowWatchlist((v) => !v)}
+                >
+                  <Star className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant={showTechnical ? "default" : "ghost"}
+                  size="icon"
+                  className={`w-10 h-10 rounded-xl mb-2 transition-all border border-border shadow ${showTechnical ? "bg-primary/90 text-primary-foreground" : "bg-white/40 text-muted-foreground hover:bg-accent/60"}`}
+                  title="Technical Analysis"
+                  onClick={() => setShowTechnical((v) => !v)}
+                >
+                  <Activity className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant={showAlerts ? "default" : "ghost"}
+                  size="icon"
+                  className={`w-10 h-10 rounded-xl transition-all border border-border shadow ${showAlerts ? "bg-primary/90 text-primary-foreground" : "bg-white/40 text-muted-foreground hover:bg-accent/60"}`}
+                  title="Alerts"
+                  onClick={() => setShowAlerts((v) => !v)}
+                >
+                  <Bell className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+
+            {/* Floating Watchlist - always visible and never clipped */}
+            {showWatchlist && !watchlistCollapsed && (
+              <div className="fixed right-20 z-50 bg-white/90 backdrop-blur-lg border border-border rounded-2xl shadow-2xl w-96 flex flex-col animate-in slide-in-from-right-10"
+                style={{ top: WATCHLIST_TOP, maxHeight: `calc(100vh - ${WATCHLIST_TOP + 16}px)`, minHeight: 320, overflowY: 'auto' }}>
+                {/* Watchlist Title (no + toggle) */}
+                <div className="p-4 border-b border-border flex flex-col gap-2">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-semibold text-lg mb-0">Watchlist</h3>
+                  </div>
+                  {/* Search Bar */}
+                  <input
+                    type="text"
+                    placeholder="Search assets..."
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    className="w-full px-4 py-2 rounded-xl border border-border bg-background/80 shadow-inner font-display text-base focus:outline-none focus:ring-2 focus:ring-primary transition mb-2"
+                    style={{ minWidth: 0 }}
+                  />
+                  {/* Tag Navbar */}
+                  <div className="flex gap-2 overflow-x-auto pb-1">
+                    {tagOptions.map(tag => (
+                      <button
+                        key={tag}
+                        className={`px-4 py-1.5 rounded-full font-display text-sm border border-border transition-all whitespace-nowrap ${selectedTag === tag ? "bg-primary text-primary-foreground shadow" : "bg-muted text-muted-foreground hover:bg-accent/60"}`}
+                        onClick={() => setSelectedTag(tag)}
                       >
-                        {symbol.slice(0, 2)}
-                      </div>
+                        {tag}
+                      </button>
                     ))}
                   </div>
                 </div>
-              ) : (
-                <div className="h-full flex flex-col">
-                  <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-                    <h3 className="font-semibold text-lg">Watchlist</h3>
-                    <Button variant="ghost" size="icon" onClick={() => setWatchlistCollapsed(true)} className="w-8 h-8">
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <div className="flex-1 overflow-y-auto">
-                    {assets.map((asset) => (
-                      <div
-                        key={asset.symbol}
-                        className={`flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 border-b border-gray-100 last:border-b-0 ${
-                          selectedAsset === asset.symbol ? "bg-blue-50 border-l-4 border-l-blue-500" : ""
-                        }`}
-                        onClick={() => setSelectedAsset(asset.symbol)}
-                      >
-                        <div className="flex items-center gap-3">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              toggleFavorite(asset.symbol)
-                            }}
-                          >
-                            <Star
-                              className={`h-4 w-4 transition-colors ${
-                                favorites.includes(asset.symbol)
-                                  ? "fill-yellow-400 text-yellow-400"
-                                  : "text-gray-300 hover:text-yellow-400"
-                              }`}
-                            />
-                          </button>
-                          <div>
-                            <p className="font-medium">{asset.symbol}</p>
-                            <p className="text-sm text-gray-500">{asset.name}</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-medium">{asset.price}</p>
-                          <p
-                            className={`text-sm flex items-center ${asset.isPositive ? "text-green-600" : "text-red-600"}`}
-                          >
-                            {asset.isPositive ? (
-                              <ArrowUpRight className="h-3 w-3 mr-1" />
-                            ) : (
-                              <ArrowDownRight className="h-3 w-3 mr-1" />
-                            )}
-                            {asset.change}
-                          </p>
+                <div className="flex-1 overflow-y-auto">
+                  {assets.map((asset) => (
+                    <div
+                      key={asset.symbol}
+                      className={`flex items-center justify-between p-4 cursor-pointer hover:bg-muted border-b border-border last:border-b-0 ${selectedAsset === asset.symbol ? "bg-primary/10 border-l-4 border-l-primary" : ""}`}
+                      onClick={() => setSelectedAsset(asset.symbol)}
+                    >
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            toggleFavorite(asset.symbol)
+                          }}
+                          className="focus:outline-none"
+                        >
+                          <Star
+                            className={`h-4 w-4 transition-colors ${favorites.includes(asset.symbol) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground hover:text-yellow-400"}`}
+                          />
+                        </button>
+                        <div>
+                          <p className="font-medium text-foreground">{asset.symbol}</p>
+                          <p className="text-sm text-muted-foreground">{asset.name}</p>
                         </div>
                       </div>
-                    ))}
-                  </div>
+                      <div className="text-right">
+                        <p className="font-medium text-foreground">{asset.price}</p>
+                        <p className={`text-sm flex items-center ${asset.isPositive ? "text-green-600" : "text-red-600"}`}>
+                          {asset.isPositive ? (
+                            <ArrowUpRight className="h-3 w-3 mr-1" />
+                          ) : (
+                            <ArrowDownRight className="h-3 w-3 mr-1" />
+                          )}
+                          {asset.change}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Full-Screen Settings Sheet */}
+      {showSettingsSheet && (
+        <div className="fixed inset-x-0 bottom-0 z-50 bg-card/95 backdrop-blur-lg border-t border-border rounded-t-2xl shadow-2xl p-8 flex flex-col items-center animate-in slide-in-from-bottom-10">
+          <button className="absolute top-4 right-4 bg-muted rounded-full p-2 shadow hover:bg-accent transition" onClick={() => setShowSettingsSheet(false)} title="Close">
+            <Minimize2 className="h-5 w-5" />
+          </button>
+          <div className="w-12 h-1.5 bg-muted rounded-full mb-4" />
+          <h2 className="font-display font-bold text-lg mb-4">Settings</h2>
+          <div className="text-muted-foreground mb-8">(Settings features coming soon)</div>
+        </div>
+      )}
     </FlexibleLayout>
   )
 }

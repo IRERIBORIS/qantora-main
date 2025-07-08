@@ -58,15 +58,26 @@ export default function PortfolioPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Mobile Layout */}
-      <div className="block md:hidden h-screen overflow-hidden">
+      <div className="block md:hidden h-screen overflow-hidden flex flex-col">
         {/* Blended Header */}
-        <div className="bg-gray-50 px-4 pt-20 pb-4">
-          <h1 className="font-display font-bold text-xl text-gray-900">
-            {greeting}, {username}
-          </h1>
-          <p className="text-gray-600 text-sm mt-1">{getWelcomeMessage()}</p>
+        <div className="bg-background px-4 pt-20 pb-4">
+          <div className="flex items-center gap-4">
+            {/* Profile Picture Placeholder */}
+            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center overflow-hidden border border-border">
+              {/* TODO: Replace with user profile image if available */}
+              <span className="text-lg font-bold text-muted-foreground">B</span>
+            </div>
+            <div>
+              <h1 className="font-display font-bold text-xl text-foreground">
+                {greeting}, {username}
+              </h1>
+              <p className="text-muted-foreground text-sm mt-1">{getWelcomeMessage()}</p>
+            </div>
+            {/* Upload Button (hidden for now, to be implemented) */}
+            {/* <Button size="sm" className="ml-auto">Change</Button> */}
+          </div>
         </div>
 
         {/* Navigation Tabs */}
@@ -75,8 +86,8 @@ export default function PortfolioPage() {
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                  activeTab === tab.id ? "bg-gray-900 text-white" : "bg-white text-gray-600 hover:bg-gray-100"
+                className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors font-display ${
+                  activeTab === tab.id ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground hover:bg-muted"
                 }`}
                 onClick={() => setActiveTab(tab.id)}
               >
@@ -89,9 +100,9 @@ export default function PortfolioPage() {
         {/* Content Area - Single Viewport */}
         <div className="flex-1 px-4 pb-24 h-[calc(100vh-200px)] overflow-hidden">
           {activeTab === "dna" && (
-            <Card className="h-full">
+            <Card className="h-full bg-card border border-border">
               <CardHeader>
-                <CardTitle className="text-lg font-display flex items-center gap-2">
+                <CardTitle className="text-lg font-display flex items-center gap-2 text-foreground">
                   <Star className="h-5 w-5" />
                   Trader DNA
                 </CardTitle>
@@ -99,10 +110,10 @@ export default function PortfolioPage() {
               <CardContent className="h-[calc(100%-80px)] overflow-y-auto">
                 <div className="grid grid-cols-2 gap-3">
                   {traderDNA.map((asset) => (
-                    <div key={asset.symbol} className="p-3 border border-gray-200 rounded-lg bg-white">
-                      <p className="font-medium text-sm">{asset.symbol}</p>
-                      <p className="text-xs text-gray-500 truncate">{asset.name}</p>
-                      <p className="font-medium text-sm mt-2">{asset.price}</p>
+                    <div key={asset.symbol} className="p-3 border border-border rounded-lg bg-card">
+                      <p className="font-medium text-sm text-foreground">{asset.symbol}</p>
+                      <p className="text-xs text-muted-foreground truncate">{asset.name}</p>
+                      <p className="font-medium text-sm mt-2 text-foreground">{asset.price}</p>
                       <p
                         className={`text-xs flex items-center ${asset.isPositive ? "text-green-600" : "text-red-600"}`}
                       >
@@ -122,21 +133,21 @@ export default function PortfolioPage() {
 
           {activeTab === "journal" && (
             <Card
-              className="cursor-pointer hover:shadow-lg transition-shadow h-full"
+              className="cursor-pointer hover:shadow-lg transition-shadow h-full bg-card border border-border"
               onClick={() => router.push("/journal")}
             >
               <CardHeader>
-                <CardTitle className="text-lg font-display flex items-center gap-2">
+                <CardTitle className="text-lg font-display flex items-center gap-2 text-foreground">
                   <BookOpen className="h-5 w-5" />
                   Trading Journal
                 </CardTitle>
               </CardHeader>
               <CardContent className="h-[calc(100%-80px)] flex items-center justify-center">
                 <div className="text-center">
-                  <BookOpen className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                  <h3 className="font-medium text-gray-900 mb-2">Start Your Trading Journal</h3>
-                  <p className="text-sm text-gray-600 mb-4">Document trades and track performance</p>
-                  <Button className="w-full">Get Started</Button>
+                  <BookOpen className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="font-medium text-foreground mb-2">Start Your Trading Journal</h3>
+                  <p className="text-sm text-muted-foreground mb-4">Document trades and track performance</p>
+                  <Button className="w-full font-display">Get Started</Button>
                 </div>
               </CardContent>
             </Card>
@@ -144,59 +155,67 @@ export default function PortfolioPage() {
 
           {activeTab === "goals" && (
             <Card
-              className="cursor-pointer hover:shadow-lg transition-shadow h-full"
+              className="cursor-pointer hover:shadow-lg transition-shadow h-full bg-card border border-border"
               onClick={() => router.push("/vision-vault")}
             >
               <CardHeader>
-                <CardTitle className="text-lg font-display flex items-center gap-2">
+                <CardTitle className="text-lg font-display flex items-center gap-2 text-foreground">
                   <Target className="h-5 w-5" />
                   Vision Vault
                 </CardTitle>
               </CardHeader>
               <CardContent className="h-[calc(100%-80px)] flex items-center justify-center">
                 <div className="text-center">
-                  <Target className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                  <h3 className="font-medium text-gray-900 mb-2">Set Your Trading Goals</h3>
-                  <p className="text-sm text-gray-600 mb-4">Define and track your objectives</p>
-                  <Button className="w-full">Create Goals</Button>
+                  <Target className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="font-medium text-foreground mb-2">Set Your Trading Goals</h3>
+                  <p className="text-sm text-muted-foreground mb-4">Define and track your objectives</p>
+                  <Button className="w-full font-display">Create Goals</Button>
                 </div>
               </CardContent>
             </Card>
           )}
         </div>
+        {/* Footer above navbar */}
+        <footer className="w-full bg-card border-t border-border py-3 px-6 text-center text-sm text-muted-foreground font-display flex-shrink-0"></footer>
       </div>
 
       {/* Desktop Layout - Full Screen Grid */}
-      <div className="hidden md:block h-screen overflow-hidden">
+      <div className="hidden md:flex flex-col h-screen overflow-hidden bg-background text-foreground">
         <FlexibleLayout fullScreen>
-          {/* Greeting */}
-          <div className="mb-6">
-            <h1 className="font-display font-bold text-2xl xl:text-3xl text-gray-900">
-              {greeting}, {username}
-            </h1>
-            <p className="text-gray-600 mt-1">{getWelcomeMessage()}</p>
+          {/* Greeting (Normal, always visible) */}
+          <div className="flex items-center gap-4 px-8 py-3 max-w-[1440px] mx-auto w-full">
+            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center overflow-hidden border border-border">
+              <span className="text-2xl font-bold text-muted-foreground">B</span>
+            </div>
+            <div>
+              <h1 className="font-display font-bold text-2xl xl:text-3xl text-foreground">
+                {greeting}, {username}
+              </h1>
+              <p className="text-muted-foreground mt-1">{getWelcomeMessage()}</p>
+            </div>
           </div>
 
-          {/* Main Grid Layout - No Scrolling, Removed Portfolio Allocation */}
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 h-[calc(100vh-10rem)]">
-            {/* Left Column - Market Movers */}
-            <div className="xl:col-span-2">
-              <Card className="h-full">
+          {/* Fluid, Responsive Grid */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-y-8 gap-x-8 flex-1 min-h-0 max-w-[1440px] mx-auto px-8 w-full mt-4">
+            {/* Left Column: Market Movers (top), Trader DNA (bottom) */}
+            <div className="flex flex-col gap-8 flex-1 min-h-0">
+              {/* Market Movers */}
+              <Card className="flex-1 flex flex-col bg-card border border-border">
                 <CardHeader className="pb-4">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-xl font-display">Market Movers</CardTitle>
-                    <div className="flex items-center bg-gray-100 rounded-lg p-1">
+                    <CardTitle className="text-xl font-display text-foreground">Market Movers</CardTitle>
+                    <div className="flex items-center bg-muted rounded-lg p-1">
                       <button
-                        className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                          showGainers ? "bg-white text-gray-900 shadow-sm" : "text-gray-600"
+                        className={`px-4 py-2 rounded-md text-sm font-medium transition-colors font-display ${
+                          showGainers ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
                         }`}
                         onClick={() => setShowGainers(true)}
                       >
                         Top Gainers
                       </button>
                       <button
-                        className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                          !showGainers ? "bg-white text-gray-900 shadow-sm" : "text-gray-600"
+                        className={`px-4 py-2 rounded-md text-sm font-medium transition-colors font-display ${
+                          !showGainers ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
                         }`}
                         onClick={() => setShowGainers(false)}
                       >
@@ -205,16 +224,16 @@ export default function PortfolioPage() {
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="h-[calc(100%-80px)] overflow-y-auto">
+                <CardContent className="flex-1 flex flex-col justify-center">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     {currentMovers.map((asset) => (
-                      <div key={asset.symbol} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+                      <div key={asset.symbol} className="flex justify-between items-center p-4 bg-muted rounded-lg">
                         <div>
-                          <p className="font-medium">{asset.symbol}</p>
-                          <p className="text-sm text-gray-500">{asset.name}</p>
+                          <p className="font-medium text-foreground">{asset.symbol}</p>
+                          <p className="text-sm text-muted-foreground">{asset.name}</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-medium">{asset.price}</p>
+                          <p className="font-medium text-foreground">{asset.price}</p>
                           <p
                             className={`text-sm flex items-center justify-end ${asset.isPositive ? "text-green-600" : "text-red-600"}`}
                           >
@@ -231,28 +250,24 @@ export default function PortfolioPage() {
                   </div>
                 </CardContent>
               </Card>
-            </div>
-
-            {/* Right Column */}
-            <div className="space-y-6 h-full overflow-hidden">
               {/* Trader DNA */}
-              <Card className="h-1/2">
+              <Card className="flex-1 flex flex-col bg-card border border-border">
                 <CardHeader>
-                  <CardTitle className="text-lg font-display flex items-center gap-2">
+                  <CardTitle className="text-lg font-display flex items-center gap-2 text-foreground">
                     <Star className="h-5 w-5" />
                     Trader DNA
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="h-[calc(100%-80px)] overflow-y-auto">
-                  <div className="grid grid-cols-2 gap-3">
+                <CardContent className="flex-1 flex flex-col justify-center">
+                  <div className="grid grid-cols-2 gap-3 md:gap-2">
                     {traderDNA.map((asset) => (
                       <div
                         key={asset.symbol}
-                        className="p-3 border border-gray-200 rounded-lg bg-white hover:shadow-md transition-shadow"
+                        className="p-3 border border-border rounded-lg bg-card hover:shadow-md transition-shadow"
                       >
-                        <p className="font-medium text-sm">{asset.symbol}</p>
-                        <p className="text-xs text-gray-500 truncate">{asset.name}</p>
-                        <p className="font-medium text-sm mt-2">{asset.price}</p>
+                        <p className="font-medium text-sm text-foreground">{asset.symbol}</p>
+                        <p className="text-xs text-muted-foreground truncate">{asset.name}</p>
+                        <p className="font-medium text-sm mt-2 text-foreground">{asset.price}</p>
                         <p
                           className={`text-xs flex items-center ${asset.isPositive ? "text-green-600" : "text-red-600"}`}
                         >
@@ -268,47 +283,38 @@ export default function PortfolioPage() {
                   </div>
                 </CardContent>
               </Card>
+            </div>
 
-              {/* Trading Journal & Vision Vault */}
-              <div className="grid grid-cols-1 gap-4 h-1/2">
-                <Card
-                  className="cursor-pointer hover:shadow-lg transition-shadow"
-                  onClick={() => router.push("/journal")}
-                >
-                  <CardHeader>
-                    <CardTitle className="text-base font-display flex items-center gap-2">
-                      <BookOpen className="h-4 w-4" />
-                      Trading Journal
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-center py-4">
-                    <BookOpen className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                    <p className="text-sm text-gray-600 mb-3">Start documenting trades</p>
-                    <Button size="sm" className="w-full">
-                      Get Started
-                    </Button>
-                  </CardContent>
-                </Card>
-
-                <Card
-                  className="cursor-pointer hover:shadow-lg transition-shadow"
-                  onClick={() => router.push("/vision-vault")}
-                >
-                  <CardHeader>
-                    <CardTitle className="text-base font-display flex items-center gap-2">
-                      <Target className="h-4 w-4" />
-                      Vision Vault
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-center py-4">
-                    <Target className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                    <p className="text-sm text-gray-600 mb-3">Set trading goals</p>
-                    <Button size="sm" className="w-full">
-                      Create Goals
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
+            {/* Right Column: Vision Vault (top), Journal Card (bottom) */}
+            <div className="flex flex-col gap-8 flex-1 min-h-0">
+              {/* Vision Vault */}
+              <Card className="flex-1 flex flex-col bg-card border border-border">
+                <CardHeader>
+                  <CardTitle className="text-base font-display flex items-center gap-2 text-foreground">
+                    <Target className="h-4 w-4" />
+                    Vision Vault
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col justify-center text-center">
+                  <Target className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+                  <p className="text-sm text-muted-foreground mb-3">Set trading goals</p>
+                  <Button size="sm" className="w-full font-display" onClick={() => router.push("/vision-vault")}>Create Goals</Button>
+                </CardContent>
+              </Card>
+              {/* Journal Card */}
+              <Card className="flex-1 flex flex-col bg-card border border-border">
+                <CardHeader>
+                  <CardTitle className="text-base font-display flex items-center gap-2 text-foreground">
+                    <BookOpen className="h-4 w-4" />
+                    Trading Journal
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col justify-center text-center">
+                  <BookOpen className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+                  <p className="text-sm text-muted-foreground mb-3">Start documenting trades</p>
+                  <Button size="sm" className="w-full font-display" onClick={() => router.push("/journal")}>Get Started</Button>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </FlexibleLayout>

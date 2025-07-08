@@ -58,12 +58,12 @@ export default function MarketChart({ symbol, chartType, timeframe }: MarketChar
   }, [symbol, timeframe])
 
   if (data.length === 0) {
-    return <div className="h-[400px] flex items-center justify-center">Loading chart data...</div>
+    return <div className="h-full w-full flex items-center justify-center">Loading chart data...</div>
   }
 
   if (chartType === "line" || chartType === "area") {
     return (
-      <div className="h-[400px]">
+      <div className="h-full w-full">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
             <defs>
@@ -85,7 +85,7 @@ export default function MarketChart({ symbol, chartType, timeframe }: MarketChar
 
   if (chartType === "bar") {
     return (
-      <div className="h-[400px]">
+      <div className="h-full w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
             <XAxis dataKey="time" />
@@ -101,7 +101,7 @@ export default function MarketChart({ symbol, chartType, timeframe }: MarketChar
 
   // Candlestick chart (simplified with bars for up/down)
   return (
-    <div className="h-[400px]">
+    <div className="h-full w-full">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
           <XAxis dataKey="time" />

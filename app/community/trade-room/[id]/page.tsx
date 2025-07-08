@@ -136,18 +136,20 @@ export default function TradeRoomPage({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Mobile Layout */}
       <div className="block lg:hidden h-screen flex flex-col">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+        <div className="bg-card border-border px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="icon" onClick={() => router.back()}>
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <div>
               <h1 className="font-semibold text-lg">{roomInfo.name}</h1>
-              <p className="text-xs text-gray-500">{activeUsers} active</p>
+              <p className="text-xs text-muted-foreground">
+                {activeUsers} active
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -165,7 +167,7 @@ export default function TradeRoomPage({ params }: { params: { id: string } }) {
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`${message.isPinned ? "bg-blue-50 border border-blue-200 rounded-lg p-3" : ""}`}
+              className={`${message.isPinned ? "bg-card border border-border rounded-lg p-3" : ""}`}
             >
               {message.isPinned && (
                 <div className="flex items-center gap-2 mb-2 text-blue-600 text-xs">
@@ -175,7 +177,7 @@ export default function TradeRoomPage({ params }: { params: { id: string } }) {
               )}
               <div className="flex items-start gap-3">
                 <div
-                  className="w-8 h-8 rounded-lg bg-gray-200 flex-shrink-0 cursor-pointer"
+                  className="w-8 h-8 rounded-lg bg-card flex-shrink-0 cursor-pointer"
                   onClick={() => handleProfileClick(message.username)}
                 ></div>
                 <div className="flex-1 min-w-0">
@@ -188,26 +190,26 @@ export default function TradeRoomPage({ params }: { params: { id: string } }) {
                     </span>
                     {message.isModerator && <Crown className="h-3 w-3 text-yellow-500" />}
                     {message.isVerified && <Star className="h-3 w-3 text-blue-500" />}
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-muted-foreground">
                       {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-800 mb-2">{message.content}</p>
+                  <p className="text-sm text-foreground mb-2">{message.content}</p>
                   <div className="flex items-center gap-4">
                     <button
-                      className={`flex items-center gap-1 text-xs ${message.isLiked ? "text-red-500" : "text-gray-500"}`}
+                      className={`flex items-center gap-1 text-xs ${message.isLiked ? "text-red-500" : "text-muted-foreground"}`}
                       onClick={() => handleLikeMessage(message.id)}
                     >
                       <Heart className={`h-3 w-3 ${message.isLiked ? "fill-current" : ""}`} />
                       {message.likes}
                     </button>
-                    <button className="text-xs text-gray-500">
+                    <button className="text-xs text-muted-foreground">
                       <MessageSquare className="h-3 w-3" />
                     </button>
-                    <button className="text-xs text-gray-500">
+                    <button className="text-xs text-muted-foreground">
                       <Share2 className="h-3 w-3" />
                     </button>
-                    <button className="text-xs text-gray-500">
+                    <button className="text-xs text-muted-foreground">
                       <MoreHorizontal className="h-3 w-3" />
                     </button>
                   </div>
@@ -219,7 +221,7 @@ export default function TradeRoomPage({ params }: { params: { id: string } }) {
         </div>
 
         {/* Input */}
-        <div className="bg-white border-t border-gray-200 p-4">
+        <div className="bg-card border-t border-border p-4">
           <div className="flex items-center gap-3">
             <Input
               placeholder="Type a message..."
@@ -241,7 +243,7 @@ export default function TradeRoomPage({ params }: { params: { id: string } }) {
           {/* Main Chat Area */}
           <div className="flex-1 flex flex-col">
             {/* Header */}
-            <div className="bg-white border-b border-gray-200 px-6 py-4">
+            <div className="bg-card border-border px-6 py-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <Button variant="ghost" size="icon" onClick={() => router.back()}>
@@ -249,11 +251,11 @@ export default function TradeRoomPage({ params }: { params: { id: string } }) {
                   </Button>
                   <div>
                     <h1 className="font-display font-bold text-xl">{roomInfo.name}</h1>
-                    <p className="text-sm text-gray-600">{roomInfo.description}</p>
+                    <p className="text-sm text-muted-foreground">{roomInfo.description}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-muted-foreground">
                     <span className="font-medium">{activeUsers}</span> active
                   </div>
                   <Button variant="outline" size="sm">
@@ -272,7 +274,7 @@ export default function TradeRoomPage({ params }: { params: { id: string } }) {
               {messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`${message.isPinned ? "bg-blue-50 border border-blue-200 rounded-xl p-4" : ""}`}
+                  className={`${message.isPinned ? "bg-card border border-border rounded-xl p-4" : ""}`}
                 >
                   {message.isPinned && (
                     <div className="flex items-center gap-2 mb-3 text-blue-600 text-sm">
@@ -282,13 +284,13 @@ export default function TradeRoomPage({ params }: { params: { id: string } }) {
                   )}
                   <div className="flex items-start gap-4">
                     <div
-                      className="w-10 h-10 rounded-xl bg-gray-200 flex-shrink-0 cursor-pointer hover:opacity-80"
+                      className="w-10 h-10 rounded-xl bg-card flex-shrink-0 cursor-pointer hover:opacity-80"
                       onClick={() => handleProfileClick(message.username)}
                     ></div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-2">
                         <span
-                          className="font-semibold text-gray-900 cursor-pointer hover:underline"
+                          className="font-semibold text-foreground cursor-pointer hover:underline"
                           onClick={() => handleProfileClick(message.username)}
                         >
                           {message.user}
@@ -296,36 +298,36 @@ export default function TradeRoomPage({ params }: { params: { id: string } }) {
                         {message.isModerator && <Crown className="h-4 w-4 text-yellow-500" />}
                         {message.isVerified && <Star className="h-4 w-4 text-blue-500" />}
                         <span
-                          className="text-gray-500 cursor-pointer hover:underline"
+                          className="text-muted-foreground cursor-pointer hover:underline"
                           onClick={() => handleProfileClick(message.username)}
                         >
                           {message.username}
                         </span>
-                        <span className="text-gray-400">•</span>
-                        <span className="text-sm text-gray-500">
+                        <span className="text-muted-foreground">•</span>
+                        <span className="text-sm text-muted-foreground">
                           {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                         </span>
                       </div>
-                      <p className="text-gray-800 mb-3 leading-relaxed">{message.content}</p>
+                      <p className="text-foreground mb-3 leading-relaxed">{message.content}</p>
                       <div className="flex items-center gap-6">
                         <button
-                          className={`flex items-center gap-2 hover:bg-gray-100 px-3 py-1 rounded-lg transition-colors ${
-                            message.isLiked ? "text-red-500" : "text-gray-500"
+                          className={`flex items-center gap-2 hover:bg-card/80 px-3 py-1 rounded-lg transition-colors ${
+                            message.isLiked ? "text-red-500" : "text-muted-foreground"
                           }`}
                           onClick={() => handleLikeMessage(message.id)}
                         >
                           <Heart className={`h-4 w-4 ${message.isLiked ? "fill-current" : ""}`} />
                           <span>{message.likes}</span>
                         </button>
-                        <button className="flex items-center gap-2 hover:bg-gray-100 px-3 py-1 rounded-lg transition-colors text-gray-500">
+                        <button className="flex items-center gap-2 hover:bg-card/80 px-3 py-1 rounded-lg transition-colors text-muted-foreground">
                           <MessageSquare className="h-4 w-4" />
                           <span>Reply</span>
                         </button>
-                        <button className="flex items-center gap-2 hover:bg-gray-100 px-3 py-1 rounded-lg transition-colors text-gray-500">
+                        <button className="flex items-center gap-2 hover:bg-card/80 px-3 py-1 rounded-lg transition-colors text-muted-foreground">
                           <Share2 className="h-4 w-4" />
                           <span>Share</span>
                         </button>
-                        <button className="hover:bg-gray-100 p-2 rounded-lg transition-colors text-gray-500">
+                        <button className="hover:bg-card/80 p-2 rounded-lg transition-colors text-muted-foreground">
                           <MoreHorizontal className="h-4 w-4" />
                         </button>
                       </div>
@@ -337,7 +339,7 @@ export default function TradeRoomPage({ params }: { params: { id: string } }) {
             </div>
 
             {/* Input */}
-            <div className="bg-white border-t border-gray-200 p-6">
+            <div className="bg-card border-t border-border p-6">
               <div className="flex items-center gap-4">
                 <Input
                   placeholder="Type a message..."
@@ -355,20 +357,20 @@ export default function TradeRoomPage({ params }: { params: { id: string } }) {
           </div>
 
           {/* Right Sidebar - Room Info */}
-          <div className="w-80 bg-white border-l border-gray-200 flex flex-col">
-            <div className="p-6 border-b border-gray-200">
+          <div className="w-80 bg-card border-l border-border flex flex-col">
+            <div className="p-6 border-b border-border">
               <h2 className="font-display font-semibold text-lg mb-4">Room Info</h2>
               <div className="space-y-3">
                 <div>
-                  <span className="text-sm text-gray-500">Category</span>
+                  <span className="text-sm text-muted-foreground">Category</span>
                   <p className="font-medium">{roomInfo.category}</p>
                 </div>
                 <div>
-                  <span className="text-sm text-gray-500">Members</span>
+                  <span className="text-sm text-muted-foreground">Members</span>
                   <p className="font-medium">{roomInfo.members.toLocaleString()}</p>
                 </div>
                 <div>
-                  <span className="text-sm text-gray-500">Moderators</span>
+                  <span className="text-sm text-muted-foreground">Moderators</span>
                   <div className="space-y-1">
                     {roomInfo.moderators.map((mod) => (
                       <p
@@ -390,17 +392,17 @@ export default function TradeRoomPage({ params }: { params: { id: string } }) {
                 {messages.slice(0, 10).map((message) => (
                   <div
                     key={message.id}
-                    className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg"
+                    className="flex items-center gap-3 cursor-pointer hover:bg-card/80 p-2 rounded-lg"
                     onClick={() => handleProfileClick(message.username)}
                   >
-                    <div className="w-8 h-8 rounded-lg bg-gray-200 flex-shrink-0"></div>
+                    <div className="w-8 h-8 rounded-lg bg-card flex-shrink-0"></div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-sm truncate">{message.user}</span>
                         {message.isModerator && <Crown className="h-3 w-3 text-yellow-500" />}
                         {message.isVerified && <Star className="h-3 w-3 text-blue-500" />}
                       </div>
-                      <p className="text-xs text-gray-500">{message.username}</p>
+                      <p className="text-xs text-muted-foreground">{message.username}</p>
                     </div>
                   </div>
                 ))}
