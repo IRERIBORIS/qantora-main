@@ -58,10 +58,14 @@ export default function Navbar() {
 
   const routes = ["/", "/markets", "/cato", "/learning", "/community"];
 
+  // Check if current page should hide the navbar
+  const shouldHideNavbar = pathname === "/settings" || pathname === "/profile";
+
   return (
     <>
       {/* Mobile: ExpandableTabs */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 block md:hidden bg-background border-t border-border px-2 py-1">
+      {!shouldHideNavbar && (
+      <nav className="fixed bottom-0 left-0 right-0 z-40 block md:hidden bg-background border-t border-border px-2 py-1">
         <ExpandableTabs
           tabs={tabs}
           onChange={index => {
@@ -72,9 +76,10 @@ export default function Navbar() {
           className="w-full justify-center"
         />
       </nav>
+      )}
       {/* Desktop: Tubelight NavBar */}
       <div className="hidden md:block">
-        <NavBar items={navItems} currentPath={pathname} className="fixed bottom-2 left-1/2 -translate-x-1/2 z-50" />
+        <NavBar items={navItems} currentPath={pathname} className="fixed bottom-2 left-1/2 -translate-x-1/2 z-40" />
       </div>
     </>
   );

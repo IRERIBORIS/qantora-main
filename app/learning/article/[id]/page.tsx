@@ -209,11 +209,12 @@ export default function ArticlePage() {
         <div className="container mx-auto px-6 py-4">
           <Button 
             variant="ghost" 
-            onClick={() => router.back()} 
-            className="hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
+            onClick={() => router.push('/learning?tab=articles')}
+            className="hover:bg-accent text-muted-foreground hover:text-foreground transition-colors flex items-center"
+            aria-label="Back to Learning Articles"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Learning Center
+            <ArrowLeft className="h-4 w-4" />
+            <span className="hidden md:inline ml-2">Back to Learning Center</span>
           </Button>
         </div>
       </div>

@@ -82,9 +82,15 @@ export default function JournalPage() {
   return (
     <FlexibleLayout fullScreen>
       {/* Mobile Layout */}
-      <div className="block lg:hidden">
-        <div className="flex items-center gap-4 mb-6">
-          <Button variant="outline" size="icon" onClick={() => router.back()} className="rounded-lg">
+      <div className="block md:hidden page-enter page-enter-active">
+        <div className="px-4 pt-4 pb-6">
+          <div className="flex items-center gap-3 mb-6">
+            <Button 
+              variant="outline" 
+              size="icon" 
+              onClick={() => router.back()} 
+              className="rounded-lg h-9 w-9 back-btn btn-smooth"
+            >
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
@@ -93,11 +99,45 @@ export default function JournalPage() {
           </div>
         </div>
 
+          {/* Progress Stats Cards - Horizontal Scrollable */}
+          <div className="mb-6">
+            <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+              <Card className="min-w-[140px] max-w-[160px] flex-shrink-0 card-hover">
+                <CardContent className="p-4 text-center">
+                  <Calendar className="h-6 w-6 mx-auto text-blue-600 mb-2" />
+                  <div className="text-xl font-bold text-gray-900">{stats.totalEntries}</div>
+                  <div className="text-xs text-gray-600">Total Entries</div>
+                </CardContent>
+              </Card>
+              <Card className="min-w-[140px] max-w-[160px] flex-shrink-0 card-hover">
+                <CardContent className="p-4 text-center">
+                  <TrendingUp className="h-6 w-6 mx-auto text-green-600 mb-2" />
+                  <div className="text-xl font-bold text-green-600">{stats.winRate}%</div>
+                  <div className="text-xs text-gray-600">Win Rate</div>
+                </CardContent>
+              </Card>
+              <Card className="min-w-[140px] max-w-[160px] flex-shrink-0 card-hover">
+                <CardContent className="p-4 text-center">
+                  <Target className="h-6 w-6 mx-auto text-purple-600 mb-2" />
+                  <div className="text-xl font-bold text-gray-900">{stats.avgRR}:1</div>
+                  <div className="text-xs text-gray-600">Avg R:R</div>
+                </CardContent>
+              </Card>
+              <Card className="min-w-[140px] max-w-[160px] flex-shrink-0 card-hover">
+                <CardContent className="p-4 text-center">
+                  <DollarSign className="h-6 w-6 mx-auto text-blue-600 mb-2" />
+                  <div className="text-xl font-bold text-green-600">${stats.totalPnL}</div>
+                  <div className="text-xs text-gray-600">Total P&L</div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
         {/* Mobile content similar to before but with new entry form */}
         <div className="space-y-4">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-lg font-display">New Entry</CardTitle>
+              <CardHeader className="pb-4">
+                <CardTitle className="text-base font-display">New Entry</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
@@ -105,9 +145,10 @@ export default function JournalPage() {
                   placeholder="Instrument (e.g., AAPL)"
                   value={newEntry.instrument}
                   onChange={(e) => setNewEntry({ ...newEntry, instrument: e.target.value })}
+                    className="text-sm"
                 />
                 <Select value={newEntry.mood} onValueChange={(value) => setNewEntry({ ...newEntry, mood: value })}>
-                  <SelectTrigger>
+                    <SelectTrigger className="text-sm">
                     <SelectValue placeholder="Mood" />
                   </SelectTrigger>
                   <SelectContent>
@@ -118,21 +159,24 @@ export default function JournalPage() {
                 </Select>
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-3 gap-3">
                 <Input
                   placeholder="Entry Price"
                   value={newEntry.entryPrice}
                   onChange={(e) => setNewEntry({ ...newEntry, entryPrice: e.target.value })}
+                    className="text-sm"
                 />
                 <Input
                   placeholder="Exit Price"
                   value={newEntry.exitPrice}
                   onChange={(e) => setNewEntry({ ...newEntry, exitPrice: e.target.value })}
+                    className="text-sm"
                 />
                 <Input
                   placeholder="R:R (e.g., 2:1)"
                   value={newEntry.riskReward}
                   onChange={(e) => setNewEntry({ ...newEntry, riskReward: e.target.value })}
+                    className="text-sm"
                 />
               </div>
 
@@ -140,10 +184,10 @@ export default function JournalPage() {
                 placeholder="Describe your trade, thoughts, and lessons learned..."
                 value={newEntry.content}
                 onChange={(e) => setNewEntry({ ...newEntry, content: e.target.value })}
-                className="min-h-[120px]"
+                  className="min-h-[120px] text-sm"
               />
 
-              <Button onClick={handleSaveEntry} className="w-full">
+                <Button onClick={handleSaveEntry} className="w-full text-sm btn-smooth">
                 <Plus className="h-4 w-4 mr-2" />
                 Save Entry
               </Button>
@@ -175,6 +219,160 @@ export default function JournalPage() {
                 </CardContent>
               </Card>
             ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* iPad Portrait Layout */}
+      <div className="hidden md:block lg:hidden">
+        <div className="px-8 pt-6 pb-8 max-w-2xl mx-auto">
+          <div className="flex items-center gap-4 mb-8">
+            <Button variant="outline" size="icon" onClick={() => router.back()} className="rounded-lg h-10 w-10">
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <div>
+              <h1 className="font-display font-bold text-3xl text-gray-900">Trading Journal</h1>
+              <p className="text-gray-600 text-base">Document your trading journey</p>
+            </div>
+          </div>
+
+          {/* Stats Overview for iPad - Horizontal Scrollable */}
+          <div className="mb-8">
+            <div className="flex gap-6 overflow-x-auto scrollbar-hide pb-2">
+              <Card className="min-w-[180px] max-w-[200px] flex-shrink-0">
+                <CardContent className="p-4 text-center">
+                  <Calendar className="h-6 w-6 mx-auto text-blue-600 mb-2" />
+                  <div className="text-xl font-bold text-gray-900">{stats.totalEntries}</div>
+                  <div className="text-sm text-gray-600">Total Entries</div>
+                </CardContent>
+              </Card>
+              <Card className="min-w-[180px] max-w-[200px] flex-shrink-0">
+                <CardContent className="p-4 text-center">
+                  <TrendingUp className="h-6 w-6 mx-auto text-green-600 mb-2" />
+                  <div className="text-xl font-bold text-green-600">{stats.winRate}%</div>
+                  <div className="text-sm text-gray-600">Win Rate</div>
+                </CardContent>
+              </Card>
+              <Card className="min-w-[180px] max-w-[200px] flex-shrink-0">
+                <CardContent className="p-4 text-center">
+                  <Target className="h-6 w-6 mx-auto text-purple-600 mb-2" />
+                  <div className="text-xl font-bold text-gray-900">{stats.avgRR}:1</div>
+                  <div className="text-sm text-gray-600">Avg R:R</div>
+                </CardContent>
+              </Card>
+              <Card className="min-w-[180px] max-w-[200px] flex-shrink-0">
+                <CardContent className="p-4 text-center">
+                  <DollarSign className="h-6 w-6 mx-auto text-blue-600 mb-2" />
+                  <div className="text-xl font-bold text-green-600">${stats.totalPnL}</div>
+                  <div className="text-sm text-gray-600">Total P&L</div>
+                </CardContent>
+              </Card>
+              <Card className="min-w-[180px] max-w-[200px] flex-shrink-0">
+                <CardContent className="p-4 text-center">
+                  <div className="text-xl font-bold text-gray-900">{stats.thisWeek}</div>
+                  <div className="text-sm text-gray-600">This Week</div>
+                </CardContent>
+              </Card>
+              <Card className="min-w-[180px] max-w-[200px] flex-shrink-0">
+                <CardContent className="p-4 text-center">
+                  <div className="text-xl font-bold text-green-600">${stats.bestTrade}</div>
+                  <div className="text-sm text-gray-600">Best Trade</div>
+                </CardContent>
+              </Card>
+              <Card className="min-w-[180px] max-w-[200px] flex-shrink-0">
+                <CardContent className="p-4 text-center">
+                  <div className="text-xl font-bold text-orange-600">{stats.streak}</div>
+                  <div className="text-sm text-gray-600">Day Streak</div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* Main Content Grid for iPad */}
+          <div className="space-y-6">
+            {/* New Entry Form */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl font-display">New Entry</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-5">
+                <div className="grid grid-cols-2 gap-5">
+                  <Input
+                    placeholder="Instrument (e.g., AAPL)"
+                    value={newEntry.instrument}
+                    onChange={(e) => setNewEntry({ ...newEntry, instrument: e.target.value })}
+                  />
+                  <Select value={newEntry.mood} onValueChange={(value) => setNewEntry({ ...newEntry, mood: value })}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Mood" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="positive">😊 Positive</SelectItem>
+                      <SelectItem value="neutral">😐 Neutral</SelectItem>
+                      <SelectItem value="negative">😞 Negative</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="grid grid-cols-3 gap-5">
+                  <Input
+                    placeholder="Entry Price"
+                    value={newEntry.entryPrice}
+                    onChange={(e) => setNewEntry({ ...newEntry, entryPrice: e.target.value })}
+                  />
+                  <Input
+                    placeholder="Exit Price"
+                    value={newEntry.exitPrice}
+                    onChange={(e) => setNewEntry({ ...newEntry, exitPrice: e.target.value })}
+                  />
+                  <Input
+                    placeholder="R:R (e.g., 2:1)"
+                    value={newEntry.riskReward}
+                    onChange={(e) => setNewEntry({ ...newEntry, riskReward: e.target.value })}
+                  />
+                </div>
+
+                <Textarea
+                  placeholder="Describe your trade, thoughts, and lessons learned..."
+                  value={newEntry.content}
+                  onChange={(e) => setNewEntry({ ...newEntry, content: e.target.value })}
+                  className="min-h-[140px]"
+                />
+
+                <Button onClick={handleSaveEntry} className="w-full">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Save Entry
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Entries list for iPad */}
+            <div className="space-y-6">
+              {entries.map((entry) => (
+                <Card key={entry.id}>
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <span className="text-base text-gray-500">{formatDate(entry.date)}</span>
+                        <span className="px-3 py-1.5 bg-gray-100 rounded-full text-sm font-medium">{entry.instrument}</span>
+                      </div>
+                      <span
+                        className={`text-base font-medium ${entry.outcome === "win" ? "text-green-600" : "text-red-600"}`}
+                      >
+                        {entry.pnl}
+                      </span>
+                    </div>
+                    <p className="text-base text-gray-700 leading-relaxed mb-4">{entry.content}</p>
+                    <div className="flex items-center justify-between text-sm text-gray-500">
+                      <span>Entry: {entry.entryPrice}</span>
+                      <span>Exit: {entry.exitPrice}</span>
+                      <span>R:R: {entry.riskReward}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </div>

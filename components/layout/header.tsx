@@ -64,25 +64,25 @@ export default function Header() {
           {/* Notifications */}
           <DropdownMenu open={showNotifications} onOpenChange={setShowNotifications}>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative h-10 w-10 rounded-xl hover:bg-gray-100">
-                <Bell className="h-5 w-5 text-gray-600" />
+              <Button variant="ghost" size="icon" className="relative h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl hover:bg-gray-100">
+                <Bell className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
                 {notificationCount > 0 && (
-                  <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center p-0 border-2 border-white">
+                  <Badge className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 h-4 w-4 sm:h-5 sm:w-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center p-0 border border-white">
                     {notificationCount}
                   </Badge>
                 )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-80">
-              <div className="p-4 border-b">
+            <DropdownMenuContent align="end" className="w-72 sm:w-80 max-h-64 sm:max-h-80">
+              <div className="p-3 sm:p-4 border-b">
                 <h3 className="font-semibold text-sm">Notifications</h3>
               </div>
-              <div className="max-h-80 overflow-y-auto">
+              <div className="max-h-48 sm:max-h-64 overflow-y-auto">
                 {notifications.map((notification) => (
-                  <div key={notification.id} className="p-4 hover:bg-gray-50 cursor-pointer border-b last:border-b-0">
-                    <div className="flex items-start gap-3">
+                  <div key={notification.id} className="p-3 sm:p-4 hover:bg-gray-50 cursor-pointer border-b last:border-b-0">
+                    <div className="flex items-start gap-2 sm:gap-3">
                       <div
-                        className={`w-2 h-2 rounded-full mt-2 ${
+                        className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full mt-1.5 sm:mt-2 ${
                           notification.type === "price"
                             ? "bg-green-500"
                             : notification.type === "news"
@@ -90,16 +90,16 @@ export default function Header() {
                               : "bg-purple-500"
                         }`}
                       />
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900">{notification.title}</p>
-                        <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">{notification.title}</p>
+                        <p className="text-xs text-gray-500 mt-0.5 sm:mt-1">{notification.time}</p>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-              <div className="p-4 border-t">
-                <Button variant="ghost" className="w-full text-sm">
+              <div className="p-3 sm:p-4 border-t">
+                <Button variant="ghost" className="w-full text-xs sm:text-sm">
                   View All Notifications
                 </Button>
               </div>
@@ -127,13 +127,13 @@ export default function Header() {
                   </div>
                 </div>
               </div>
-              <DropdownMenuItem className="cursor-pointer">
+              <DropdownMenuItem className="cursor-pointer btn-smooth">
                 <User className="mr-2 h-4 w-4" />
-                <Link href="/profile">Profile</Link>
+                <Link href="/profile" className="w-full">Profile</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer">
+              <DropdownMenuItem className="cursor-pointer btn-smooth">
                 <Settings className="mr-2 h-4 w-4" />
-                <Link href="/settings">Settings</Link>
+                <Link href="/settings" className="w-full">Settings</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="cursor-pointer text-red-600">
